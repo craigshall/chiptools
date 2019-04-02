@@ -9,7 +9,7 @@ from numpy import NaN
 # removes duplicates and keeps the row with the most non null columns
 
 
-def keep_row_most_columns(df):
+def drop_emptier_dups(df):
     """Remove any rows with duplicate indices, keeping the first row with most non null columns.
        Takes a pandas DataFrame and returns the sorted DataFrame
 
@@ -22,7 +22,7 @@ def keep_row_most_columns(df):
         2019-04-02 11:00:00  1.0  2.0  NaN
         2019-04-02 11:00:00  3.0  NaN  4.0
         2019-04-02 11:00:00  NaN  5.0  NaN
-        >>> keep_row_most_columns(df)
+        >>> drop_emptier_dups(df)
                                A    B   C
         2019-04-02 11:00:00  1.0  2.0 NaN
     """
