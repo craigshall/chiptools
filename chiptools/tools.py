@@ -16,10 +16,15 @@ def keep_row_most_columns(df):
        :param df: the pandas DataFrame to remove duplicated rows from
        :return: df; the sorted DataFrame with duplicated rows removed
 
-        >>> df = pd.DataFrame(index=([pd.to_datetime('2019-04-02 11:00:00')]*3), \
-                             columns=['A','B','C'], \
-                             data=[[1, 2, NaN], [3, NaN, 4], [NaN, 5, NaN]])
+        >>> df = pd.DataFrame(index=([pd.to_datetime('2019-04-02 11:00:00')]*3), columns=['A','B','C'], data=[[1, 2, NaN], [3, NaN, 4], [NaN, 5, NaN]])
+        >>> print(df)
+                               A    B    C
+        2019-04-02 11:00:00  1.0  2.0  NaN
+        2019-04-02 11:00:00  3.0  NaN  4.0
+        2019-04-02 11:00:00  NaN  5.0  NaN
         >>> keep_row_most_columns(df)
+                               A    B   C
+        2019-04-02 11:00:00  1.0  2.0 NaN
     """
 
     # ensure that df is sorted so that duplicated indices are contiguous
@@ -36,9 +41,6 @@ def keep_row_most_columns(df):
         # create DataFrame with the rows which share the index
         shared_index_df = df[dup_slice].copy()  # could not index with just index had to use slice
 
-        # remove the rows from the df which share the index
-        df.drop(idx, inplace=True)
-
         # add a column that contains the number of non null columns to shared_index_df to sort against
         shared_index_df['len'] = shared_index_df.apply(lambda row: len(row.dropna()), axis=1)
 
@@ -47,6 +49,9 @@ def keep_row_most_columns(df):
         best_row.name = idx
         keep_df = keep_df.append(best_row)
 
+    # drop all of the duplicated rows from orbit, it's the only way to be sure.
+    df = df[~df.index.duplicated(keep=False)]
+
     # add back in the best_rows from among those with duplicates indices
     df = pd.concat([df, keep_df])  # not doing any concat sort as the behavior of that seems unresolved
 
@@ -54,16 +59,3 @@ def keep_row_most_columns(df):
     df.sort_index(inplace=True)
 
     return df
-
-# df = pd.DataFrame(index=([pd.to_datetime('2019-04-02 11:00:00')]*3), \
-#                  columns=['A','B','C'], \
-#                  data=[[1, 2, NaN], [3, NaN, 4], [NaN, 5, NaN]])
-# print(df)
-# dup_slice = df.index.get_loc(pd.to_datetime('2019-04-02 11:00:00'))
-# print(dup_slice)
-
-# new_df = keep_row_most_columns(df)
-# print(new_df)
-# indexset = set(df[df.index.duplicated(keep=False)].index)
-
-help(keep_row_most_columns)
