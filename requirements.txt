@@ -1,0 +1,4 @@
+# Required packages
+requirements = """
+pandas>=0.24.0
+"""
