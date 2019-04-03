@@ -21,7 +21,7 @@ def _create_expected_doc():
 
 def _create_multiple_df(fuller='first'):
     """creates a larger df to test multiple dups to remove
-       emptier specifies whether first dups or last dups have more columns"""
+       fuller specifies whether first dups or last dups have more columns"""
     np.random.seed(42)
     df = pd.DataFrame(np.random.rand(20,5), columns=columns+['D', 'E'],
                       index=pd.date_range(time, periods=20, freq='31min'))
