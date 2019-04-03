@@ -8,4 +8,4 @@ setup(name='chiptools',
       author='Craig Hall',
       email='craigsh@gmail.com',
       packages=['chiptools'],
-      install_requires=['pandas>=0.24.0'])
+      install_requires=['numpy', 'pandas>=0.24.0'])

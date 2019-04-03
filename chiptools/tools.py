@@ -53,7 +53,7 @@ def drop_emptier_dups(df):
     df = df[~df.index.duplicated(keep=False)]
 
     # add back in the best_rows from among those with duplicates indices
-    df = pd.concat([df, keep_df])  # not doing any concat sort as the behavior of that seems unresolved
+    df = pd.concat([df, keep_df], sort=False)  # suppress warnings on future behavior with sort=False
 
     # Sort the df to put appended rows back in sort order
     df.sort_index(inplace=True)
