@@ -1,4 +1,8 @@
-# Required packages
+#
+####### chiptools  requirements.txt #######
+#
+###### Requirements ######
 requirements = """
+numpy
 pandas>=0.24.0
 """

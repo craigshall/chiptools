@@ -57,5 +57,4 @@ def test_multiple_dups():
     df = _create_multiple_df(row_to_keep)
     expected = df[~df.index.duplicated(keep=row_to_keep)]
     returned = drop_emptier_dups(df)
-    #assert (assert_frame_equal(returned, expected) is None)
-
+    assert (assert_frame_equal(returned, expected) is None)
