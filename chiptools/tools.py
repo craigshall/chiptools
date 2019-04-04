@@ -59,3 +59,31 @@ def drop_emptier_dups(df):
     df.sort_index(inplace=True)
 
     return df
+
+
+def single_val_cols_to_dict(df):
+    meta_dict = {}
+
+    # if index.name has a value, store it in the meta_dict under 'index.name'
+    if df.index.name is not None:
+        if df.index.name != df.name + '_meta':
+            meta_dict['index.name'] = df.index.name
+        else:
+            # if the single value columns have already been written
+            raise UserWarning('Single value columns dict being overwritten by single_val_cols_to_dict')
+
+    df.index.name = df.name + '_meta'
+
+    # Made decision not to preserve the original columns list as meta_data
+    # meta_dict['column_list'] = list(df.columns)
+    # What about storing del_list in meta_data??s
+
+    # go through columns, if only 1 unique value, store in meta_dict with column_name:single_value pair and remove column
+    del_list = []
+    for col in df.columns:
+        if df[col].nunique(dropna=False) == 1:
+            meta_dict[col] = df.loc[df.index[0], col]
+            del_list.append(col)
+    if len(del_list) > 0:
+        df.drop(del_list, axis='columns', inplace=True)
+    return (df, meta_dict)
