@@ -61,29 +61,54 @@ def drop_emptier_dups(df):
     return df
 
 
-def single_val_cols_to_dict(df):
-    meta_dict = {}
+def single_val_cols_to_dict(df, single_value_dict=None, dict_name=None, count_na=True):
+    """Remove any columns which only have a single value for all rows,
+       storing those single values in a dictionary which uses the column name as key
+       Takes a pandas DataFrame and returns a DataFrame with removed columns and a dict
 
-    # if index.name has a value, store it in the meta_dict under 'index.name'
-    if df.index.name is not None:
-        if df.index.name != df.name + '_meta':
-            meta_dict['index.name'] = df.index.name
-        else:
-            # if the single value columns have already been written
-            raise UserWarning('Single value columns dict being overwritten by single_val_cols_to_dict')
+       Intended to preserve the static values from observations in a dictionary and reduce complexity of a DataFrame
 
-    df.index.name = df.name + '_meta'
+       :param df: the pandas DataFrame to remove single value columns from
+       :param single_value_dict: the dictionary to add removed column values to
+       :param dict_name: if set store the dict_name in the index.name attribute of the df and save old index.name to the dict
+       :param count_na: True, if you want to count a single value with na's as 2 values
+       :return: df, single_value_dict; the DataFrame with single value columns removed and the dict
+
+        >>> df = pd.DataFrame(index=pd.date_range('2019-04-02 11:00:00', periods=3, freq='1H'), columns=['col1','col2','col3'], data=[[1.0, 2.0, 3.0], [1.0, 4.0, 3.0], [1.0, 6.0, 3.0]])
+        >>> print(df)
+                            col1 col2 col3
+        2019-04-02 11:00:00  1.0  2.0  3.0
+        2019-04-02 12:00:00  1.0  4.0  3.0
+        2019-04-02 13:00:00  1.0  6.0  3.0
+        >>> single_val_cols_to_dict(df)
+                            col2
+        2019-04-02 11:00:00  2.0
+        2019-04-02 12:00:00  4.0
+        2019-04-02 13:00:00  6.0
+        {'col1': 1.0, 'col3', 3.0}
+    """
+
+    if single_value_dict is None:
+        single_value_dict = {}
+
+    # if dict_name is set, store the dict_name in the index.name attribute of df
+    # this functionality is to allow for easier reference to the dict from an attribute of the df
+    if dict_name is not None:
+        # if df.index.name has a value, store it in the single_value_dict under 'index.name'
+        if df.index.name is not None:
+            single_value_dict['index.name'] = df.index.name
+        df.index.name = dict_name
 
     # Made decision not to preserve the original columns list as meta_data
-    # meta_dict['column_list'] = list(df.columns)
-    # What about storing del_list in meta_data??s
+    # single_value_dict['column_list'] = list(df.columns)
+    # What about storing del_list in meta_data??
 
-    # go through columns, if only 1 unique value, store in meta_dict with column_name:single_value pair and remove column
-    del_list = []
+    # go through columns, if only 1 unique value, store in single_value_dict with column_name:single_value pair
+    del_list = []  # list of columns to delete
     for col in df.columns:
-        if df[col].nunique(dropna=False) == 1:
-            meta_dict[col] = df.loc[df.index[0], col]
+        if df[col].nunique(dropna=(not count_na)) == 1:  # if count_na=True do not dropna from nunique, see docstring
+            single_value_dict[col] = df.loc[df[col].first_valid_index(), col]
             del_list.append(col)
     if len(del_list) > 0:
         df.drop(del_list, axis='columns', inplace=True)
-    return (df, meta_dict)
+    return df, single_value_dict

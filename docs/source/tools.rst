@@ -1,0 +1,2 @@
+.. automodule:: chiptools.tools
+    :members:
