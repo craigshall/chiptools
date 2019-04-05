@@ -2,3 +2,4 @@ venv/
 .idea/workspace.xml
 .idea/tasks.xml
 __pycache__/
+docs_old/
