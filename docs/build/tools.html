@@ -1,0 +1,167 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Stand-alone functions &#8212; chiptools 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to chiptools documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-chiptools.tools">
+<span id="stand-alone-functions"></span><h1>Stand-alone functions<a class="headerlink" href="#module-chiptools.tools" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="chiptools.tools.drop_emptier_dups">
+<code class="descclassname">chiptools.tools.</code><code class="descname">drop_emptier_dups</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="headerlink" href="#chiptools.tools.drop_emptier_dups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove any rows with duplicate indices, keeping the first row with most non null columns.
+Takes a pandas DataFrame and returns the sorted DataFrame</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>df</strong> – the pandas DataFrame to remove duplicated rows from</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">df; the sorted DataFrame with duplicated rows removed<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">([</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;2019-04-02 11:00:00&#39;</span><span class="p">)]</span><span class="o">*</span><span class="mi">3</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">],</span> <span class="n">data</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">NaN</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="n">NaN</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="n">NaN</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">NaN</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="go">                       A    B    C</span>
+<span class="go">2019-04-02 11:00:00  1.0  2.0  NaN</span>
+<span class="go">2019-04-02 11:00:00  3.0  NaN  4.0</span>
+<span class="go">2019-04-02 11:00:00  NaN  5.0  NaN</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">drop_emptier_dups</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="go">                       A    B   C</span>
+<span class="go">2019-04-02 11:00:00  1.0  2.0 NaN</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="chiptools.tools.single_val_cols_to_dict">
+<code class="descclassname">chiptools.tools.</code><code class="descname">single_val_cols_to_dict</code><span class="sig-paren">(</span><em>df</em>, <em>single_value_dict=None</em>, <em>dict_name=None</em>, <em>count_na=True</em><span class="sig-paren">)</span><a class="headerlink" href="#chiptools.tools.single_val_cols_to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove any columns which only have a single value for all rows,
+storing those single values in a dictionary which uses the column name as key
+Takes a pandas DataFrame and returns a DataFrame with removed columns and a dict</p>
+<p>Intended to preserve the static values from observations in a dictionary and reduce complexity of a DataFrame</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> – the pandas DataFrame to remove single value columns from</li>
+<li><strong>single_value_dict</strong> – the dictionary to add removed column values to</li>
+<li><strong>dict_name</strong> – if set store the dict_name in the index.name attribute of the df and save old index.name to the dict</li>
+<li><strong>count_na</strong> – True, if you want to count a single value with na’s as 2 values</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>df, single_value_dict; the DataFrame with single value columns removed and the dict</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s1">&#39;2019-04-02 11:00:00&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;1H&#39;</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;col1&#39;</span><span class="p">,</span><span class="s1">&#39;col2&#39;</span><span class="p">,</span><span class="s1">&#39;col3&#39;</span><span class="p">],</span> <span class="n">data</span><span class="o">=</span><span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="go">                    col1 col2 col3</span>
+<span class="go">2019-04-02 11:00:00  1.0  2.0  3.0</span>
+<span class="go">2019-04-02 12:00:00  1.0  4.0  3.0</span>
+<span class="go">2019-04-02 13:00:00  1.0  6.0  3.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">single_val_cols_to_dict</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="go">                    col2</span>
+<span class="go">2019-04-02 11:00:00  2.0</span>
+<span class="go">2019-04-02 12:00:00  4.0</span>
+<span class="go">2019-04-02 13:00:00  6.0</span>
+<span class="go">{&#39;col1&#39;: 1.0, &#39;col3&#39;, 3.0}</span>
+</pre></div>
+</div>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">chiptools</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Stand-alone functions</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to chiptools documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Craig Hall.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/tools.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
