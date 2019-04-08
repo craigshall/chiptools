@@ -1,8 +1,2 @@
-#
-####### chiptools  requirements.txt #######
-#
-###### Requirements ######
-requirements = """
-numpy
-pandas>=0.24.0
-"""
+pandas==0.24.1
+numpy==1.14.2
