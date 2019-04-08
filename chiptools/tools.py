@@ -63,7 +63,7 @@ def drop_emptier_dups(df):
 
 def single_val_cols_to_dict(df, single_value_dict=None, dict_name=None, count_na=True):
     """Remove any columns which only have a single value for all rows,
-       storing those single values in a dictionary which uses the column name as key
+       storing those single values in a dictionary which uses the column name as key.
        Takes a pandas DataFrame and returns a DataFrame with removed columns and a dict
 
        Intended to preserve the static values from observations in a dictionary and reduce complexity of a DataFrame
@@ -101,7 +101,7 @@ def single_val_cols_to_dict(df, single_value_dict=None, dict_name=None, count_na
 
     # Made decision not to preserve the original columns list as meta_data
     # single_value_dict['column_list'] = list(df.columns)
-    # What about storing del_list in meta_data??
+    # What about storing del_list in dict??
 
     # go through columns, if only 1 unique value, store in single_value_dict with column_name:single_value pair
     del_list = []  # list of columns to delete
