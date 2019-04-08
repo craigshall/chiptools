@@ -107,7 +107,10 @@ def single_val_cols_to_dict(df, single_value_dict=None, dict_name=None, count_na
     del_list = []  # list of columns to delete
     for col in df.columns:
         if df[col].nunique(dropna=(not count_na)) == 1:  # if count_na=True do not dropna from nunique, see docstring
-            single_value_dict[col] = df.loc[df[col].first_valid_index(), col]
+            if df[col].first_valid_index is not None:
+                single_value_dict[col] = df.at[df[col].first_valid_index(), col]
+            else:
+                single_value_dict[col] = NaN
             del_list.append(col)
     if len(del_list) > 0:
         df.drop(del_list, axis='columns', inplace=True)
