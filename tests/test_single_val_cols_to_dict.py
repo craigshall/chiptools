@@ -25,8 +25,12 @@ def _open_test_dfs(test_fname, expected_fname):
        :param expected_fname: the file name to open to create the expected_df"""
 
     test_df = pd.read_csv(test_fname)
-    expected_df = pd.read_hdf(expected_fname, 'DataFrame')
-    expected_dict = pd.read_hdf(expected_fname, 'dict')
+
+    # wanted to use read_hdf, but that required installing additional packages...keeping things simpler for now
+    #expected_df = pd.read_hdf(expected_fname, 'DataFrame')
+    #expected_dict = pd.read_hdf(expected_fname, 'dict')
+    expected_df = pd.read_csv(expected_fname)
+    expected_dict = {'STATION': 72495723213, 'REPORT_TYPE': 'FM-15'}
     return test_df, expected_df, expected_dict
 
 
@@ -41,7 +45,7 @@ def test_docstring_example():
 
 
 def test_example_file():
-    file_prefix = ''
+    file_prefix = 'weather'
     test_fname = file_prefix + '_test.csv'
     expected_fname = file_prefix + '_expected.csv'
     test_df, expected_df, expected_dict = _open_test_dfs(test_fname, expected_fname)
