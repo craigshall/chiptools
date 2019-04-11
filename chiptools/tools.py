@@ -61,7 +61,7 @@ def drop_emptier_dups(df):
     return df
 
 
-def single_val_cols_to_dict(df, single_value_dict=None, dict_name=None, count_na=True):
+def single_val_cols_to_dict(df, single_value_dict=None, dict_name=None, count_na=True, inplace=True):
     """Remove any columns which only have a single value for all rows,
        storing those single values in a dictionary which uses the column name as key.
        Takes a pandas DataFrame and returns a DataFrame with removed columns and a dict
@@ -72,6 +72,7 @@ def single_val_cols_to_dict(df, single_value_dict=None, dict_name=None, count_na
        :param single_value_dict: the dictionary to add removed column values to
        :param dict_name: if set store the dict_name in the index.name attribute of the df and save old index.name to the dict
        :param count_na: True, if you want to count a single value with na's as 2 values
+       :param inplace: True, makes changes to df DataFrame
        :return: df, single_value_dict; the DataFrame with single value columns removed and the dict
 
         >>> df = pd.DataFrame(index=pd.date_range('2019-04-02 11:00:00', periods=3, freq='1H'), columns=['col1','col2','col3'], data=[[1.0, 2.0, 3.0], [1.0, 4.0, 3.0], [1.0, 6.0, 3.0]])
@@ -87,6 +88,8 @@ def single_val_cols_to_dict(df, single_value_dict=None, dict_name=None, count_na
         2019-04-02 13:00:00  6.0
         {'col1': 1.0, 'col3', 3.0}
     """
+    if inplace == False:
+        df = df.copy(deep=True)
 
     if single_value_dict is None:
         single_value_dict = {}
@@ -108,7 +111,7 @@ def single_val_cols_to_dict(df, single_value_dict=None, dict_name=None, count_na
     for col in df.columns:
         if df[col].nunique(dropna=(not count_na)) == 1:  # if count_na=True do not dropna from nunique, see docstring
             first_valid_idx = df[col].first_valid_index()  # keep from having to call first_valid_index twice
-            if first_valid_idx:
+            if first_valid_idx is not None:
                 single_value_dict[col] = df.at[first_valid_idx, col]
             else:
                 single_value_dict[col] = NaN
