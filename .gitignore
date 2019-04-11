@@ -3,3 +3,4 @@ venv/
 .idea/tasks.xml
 __pycache__/
 docs_old/
+chiptools/dataframe.py

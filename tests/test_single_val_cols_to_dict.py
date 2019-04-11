@@ -35,16 +35,26 @@ def _create_test_dfs(num_rows=3, single_cols=(0, 2, 4), random_cols=(1, 3), nan_
     idx = pd.date_range(time, periods=num_rows, freq='1H')
     expected_cols = []
     test_cols = []
-    if single_cols and single_nans and nans_count: expected_cols.extend(single_cols)
-    elif single_cols: test_cols.extend(single_cols)
-    if random_cols: expected_cols.extend(random_cols)
 
-    test_cols.extend(expected_cols)
+    #####################
+    # Rewrite this next whole section with subroutines that create DataFrames for each type of column
+
+    # test if cols exist and if they should be in expected, if they exist but are not expected add to test_cols
+    if single_cols and single_nans and nans_count: expected_cols.extend(single_cols)
+    elif single_cols:
+        test_cols.extend(single_cols)
+    if random_cols: expected_cols.extend(random_cols)
     if nan_cols: test_cols.extend(nan_cols)
 
-    expected_cols = ['col' + str(x) for x in sorted(expected_cols)]
-
     # create dictionary entries for single_val columns first and use those to fill df
+
+
+    # add all of the expected cols to test_cols
+    test_cols.extend(expected_cols)
+
+    expected_cols = ['col' + str(x) for x in sorted(expected_cols)]
+    test_cols = ['col' + str(x) for x in sorted(test_cols)]
+
     expected_df = pd.DataFrame(index=idx, columns=expected_cols)
     test_df = pd.DataFrame(index=idx, columns=test_cols)
 
